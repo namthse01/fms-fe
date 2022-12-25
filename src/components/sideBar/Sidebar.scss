@@ -1,0 +1,86 @@
+
+.sidebar-container{
+    height: 100vh;
+    width: 250px;
+    background-color: #2f4050;
+    overflow: auto;
+    display: inline-block;
+    z-index: 2;
+    position: fixed;
+
+    .sidebar-head{
+        .img-control{
+            border-radius: 50%;
+            border-color: antiquewhite;
+            height: 150px;
+            width: 150px;
+            object-fit: cover;
+        }
+    }
+
+    .sidebar-list{
+        height: auto;
+        padding: 0;
+        width: 100%;
+
+        :hover{
+            cursor: pointer;
+            background-color:#293846;
+        }
+
+        #active{
+            background-color: #293846;
+        }
+
+        .sideBar-row{
+            width: 100%;
+            height: 60px;
+            list-style-type: none;
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            color: white;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+            .sidebar-icon{
+                flex: 30%;
+                display: grid;
+                place-items: center;
+            }
+            .sidebar-title{
+                flex: 70%;
+            }
+        }
+    }
+
+    .side-bar-bottom{
+        height: 60px;
+        width: 100%;
+        font-size: 20px;
+        color: white;       
+        position: absolute;
+        bottom: 0px ;
+        
+        
+        .bottom-content{
+            height: 100%;
+            width: 100%;
+            justify-content: center;
+            justify-content: space-evenly;
+            display: flex;
+            flex-direction: row;
+        }
+
+        :hover{
+            cursor: pointer;
+            background-color:#293846;
+        }
+
+        #active{
+            background-color: #293846;
+        }
+    }
+}
+    
