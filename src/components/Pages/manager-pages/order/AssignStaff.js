@@ -33,9 +33,6 @@ const AssignStaff = () => {
     const navigate = useNavigate();
     const { orderId } = useParams();
 
-    //Order
-    const [order, setOrder] = useState([]);
-
     //Staff
     const [staffs, setStaffs] = useState([]);
     const [staffList, setStaffList] = useState({
@@ -50,7 +47,22 @@ const AssignStaff = () => {
         specialtyId: "1",
     });
 
+    //Work Status
+    const [filterStaffWorkStatus, setfilterStaffWorkStatus] = useState({
+        status: "1",
+    });
+
+
+    // Chuyên môn
     const handleFilterSpecialtyChange = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+
+        setfilterSpecialty({ ...filterSpecialty, [name]: value });
+    };
+
+    //Work Status
+    const handleFilterStaffWorkChange = (e) => {
         const name = e.target.name;
         const value = e.target.value;
 
@@ -162,6 +174,18 @@ const AssignStaff = () => {
                                     <option value="2">Thợ Kim Loại</option>
                                 </Form.Control>
                             </Col>
+                            <Col>
+                                <Form.Label>Trạng Thái của thợ:</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    name="specialtyId"
+                                    value={filterStaffWorkStatus.status}
+                                    onChange={handleFilterStaffWorkChange}
+                                >
+                                    <option value="1">Trống đơn</option>
+                                    <option value="2">Đang có đơn</option>
+                                </Form.Control>
+                            </Col>
                             <Col xs={2}>
                                 <Button
                                     disabled={isFetching}
@@ -228,6 +252,7 @@ const AssignStaff = () => {
                                                         </tr>
                                                     )
                                                 }
+
                                             })
                                         }
                                     </tbody>

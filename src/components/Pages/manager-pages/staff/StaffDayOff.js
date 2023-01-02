@@ -21,6 +21,8 @@ import {
 //Icons
 import RefreshIcon from '@mui/icons-material/Refresh';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import UnpublishedIcon from '@mui/icons-material/Unpublished';
 
 //Api
 import { useGetStaffDayOffQuery } from "../../../../services/slices/staff/staffApi";
@@ -31,6 +33,18 @@ const StaffDayOff = () => {
     const navigate = useNavigate();
     const [active, setActive] = useState(1);
     const [staffs, setStaffs] = useState([]);
+    const [filterDayoffStatus, setfilterDayoffStatus] = useState({
+        status: "1",
+    });
+
+    //Status dayy Off change 
+    const handleFilterStatusChange = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+
+        setfilterDayoffStatus({ ...filterDayoffStatus, [name]: value });
+    };
+
 
     //Api
     const {
@@ -68,6 +82,19 @@ const StaffDayOff = () => {
                                 </Button>
                             </InputGroup>
                         </Col>
+                        <Col>
+                            <Form.Label>Trạng Thái:</Form.Label>
+                            <Form.Control
+                                as="select"
+                                name="status"
+                                value={filterDayoffStatus.status}
+                                onChange={handleFilterStatusChange}
+                            >
+                                <option value="1">Chờ duyệt</option>
+                                <option value="2">Từ chối</option>
+                                <option value="3">Đã duyệt</option>
+                            </Form.Control>
+                        </Col>
                         <Col xs={2}>
                             <Button
                                 // disabled={isFetching}
@@ -94,23 +121,32 @@ const StaffDayOff = () => {
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Tên nhân viên</th>
-                                            <th>Số điện thoại</th>
+                                            <th>Id nhân viên</th>
+                                            {/* <th>Số điện thoại</th> */}
                                             <th>Ngày nghỉ</th>
                                             <th>Lý Do</th>
+                                            <th>Trạng thái đơn xin nghỉ</th>
+                                            <th>Đồng ý</th>
+                                            <th>Từ chối</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {staffs
-                                            .slice(10 * (active - 1), 10 * active)
                                             .map((staff, index) => {
                                                 return (
                                                     <tr key={index}>
                                                         <td>{index + 1}</td>
-                                                        <td>{staff.employeeName}</td>
-                                                        <td>{staff.employeePhoneNumber}</td>
+                                                        <td>{staff.id}</td>
+                                                        {/* <td>{staff.employeePhoneNumber}</td> */}
                                                         <td>{moment(staff.dayOff).format("MM/DD/YYYY")}</td>
                                                         <td>{staff.reason}</td>
+                                                        <td></td>
+                                                        <td>
+                                                            <CheckCircleIcon />
+                                                        </td>
+                                                        <td>
+                                                            <UnpublishedIcon />
+                                                        </td>
                                                     </tr>
                                                 )
                                             })

@@ -131,11 +131,10 @@ const Customer = () => {
                                                                         </Tooltip>
                                                                     }
                                                                 >
-
                                                                     {/* navigate to staff detail */}
                                                                     <Button
                                                                         onClick={() => {
-                                                                            navigate('/manager/customer-detail/' + customer.customerId);
+                                                                            navigate('/manager/customer-detail/' + customer.customerPhone);
                                                                         }}
                                                                     >
                                                                         <BorderColorIcon />

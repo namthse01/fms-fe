@@ -18,10 +18,18 @@ export const customerApi = apiSlice.injectEndpoints({
             mode: "no-cors",
             keepUnusedDataFor: 0,
         }),
+
+        //getCustomerby PhoneNumb
+        getCustomerByPhoneNumb: builder.query({
+            query: (customerPhone) => `/api/manager/getCustomerInforByCustomerPhone/${customerPhone}`,
+            method: "GET",
+            mode: "no-cors",
+            keepUnusedDataFor: 0,
+        }),
     })
 });
 
-export const { useGetCustomerByIdQuery, useGetAllCustomersQuery } = customerApi;
+export const { useGetCustomerByIdQuery, useGetAllCustomersQuery, useGetCustomerByPhoneNumbQuery } = customerApi;
 
 
 // import axios from '../axios';

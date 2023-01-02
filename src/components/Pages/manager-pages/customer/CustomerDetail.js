@@ -28,14 +28,14 @@ import './CustomerDetail.scss'
 import { Avatar } from "@mui/material";
 
 //API
-import { useGetCustomerByIdQuery } from "../../../../services/slices/customer/customerApi";
+import { useGetCustomerByPhoneNumbQuery } from "../../../../services/slices/customer/customerApi";
 
 const CustomerDetail = () => {
 
     //local state
     const navigate = useNavigate();
     const [customer, setCustomer] = useState([]);
-    const { customerId } = useParams();
+    const customerPhoneNumb = useParams();
 
     //API
     const {
@@ -43,13 +43,14 @@ const CustomerDetail = () => {
         refetch: refetch,
         isFetching: isFetching,
         error,
-    } = useGetCustomerByIdQuery(customerId);
+    } = useGetCustomerByPhoneNumbQuery(customerPhoneNumb.customerPhone);
 
     useEffect(() => {
         if (!isFetching) {
             setCustomer(customerDetailData)
         }
     }, [isFetching]);
+
 
     return (
         <>
@@ -78,7 +79,7 @@ const CustomerDetail = () => {
                                                 <Form.Label>Họ và tên:</Form.Label>
                                                 <Form.Control
                                                     readOnly
-                                                    defaultValue={customer.customerName} // tên khách hàng
+                                                    defaultValue={customer[0].customerName} // tên khách hàng
                                                 />
                                             </Form.Group>
                                         </Col>
@@ -98,28 +99,19 @@ const CustomerDetail = () => {
                                                 <Form.Label>Số điện thoại:</Form.Label>
                                                 <Form.Control
                                                     readOnly
-                                                    defaultValue={customer.customerPhone} // Số điện thoại
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                        {/* <Col>
-                                            <Form.Group>
-                                                <Form.Label>Số địa chỉ:</Form.Label>
-                                                <Form.Control
-                                                    readOnly
-                                                    defaultValue={customer.address} // Địa chỉ
+                                                    defaultValue={customer[0].customerPhone} // Số điện thoại
                                                 />
                                             </Form.Group>
                                         </Col>
                                         <Col>
                                             <Form.Group>
-                                                <Form.Label>Email:</Form.Label>
+                                                <Form.Label>Số địa chỉ:</Form.Label>
                                                 <Form.Control
                                                     readOnly
-                                                    defaultValue={'namthse@gmail.com'} // Email
+                                                    defaultValue="243/28/2 Lê văn Ngân" // Địa chỉ
                                                 />
                                             </Form.Group>
-                                        </Col> */}
+                                        </Col>
                                     </Row>
                                 </Col>
                                 <Col xs={3}>

@@ -32,7 +32,7 @@ import './Order_detail.scss'
 import { Avatar } from "@mui/material";
 
 //Api
-import { useGetOrderDetailByIdQuery, usePostChangeWorkingStatusMutation } from "../../../../services/slices/order/orderApi";
+import { useGetOrderDetailByIdQuery, usePostChangeWorkingStatusMutation, usePutDeleteStaffAssignMutation } from "../../../../services/slices/order/orderApi";
 
 
 const OrderDetail = () => {
@@ -75,15 +75,17 @@ const OrderDetail = () => {
         isFetching: isFetching,
     } = useGetOrderDetailByIdQuery(orderId);
 
-
-    console.log("fetch:", isFetching);
     useEffect(() => {
         if (!isFetching) {
             setOrder(orderDetailData)
-            setEmployeeData(...employeeData, orderDetailData.listEmployeeAssign)
+            setEmployeeData(orderDetailData.listEmployeeAssign)
             setServiceData(orderDetailData.listOrderServiceInfor)
         }
     }, [isFetching]);
+
+    console.log("Order:", orderDetailData);
+    console.log("Employee:", employeeData);
+
 
     //Working Status
     const [orderWorkingStatus] = usePostChangeWorkingStatusMutation();
@@ -100,6 +102,28 @@ const OrderDetail = () => {
         }
     }
 
+    //Remove Staff
+    const [removeStaffAssign] = usePutDeleteStaffAssignMutation();
+    const removeStaff = (assignId, employeeId) => {
+        if (assignId != 0) {
+            handleRemoveStaff(assignId, employeeId)
+        }
+    }
+
+    const handleRemoveStaff = async (assignId, employeeId) => {
+        try {
+            await removeStaffAssign({ assignId: assignId, employeeId: employeeId })
+                .unwrap().then((res) => {
+                    if (res) {
+                        refetch()
+                    }
+                })
+
+        } catch (error) {
+            console.log("Show error: ", error)
+        }
+    }
+
     const uniqueNames = [];
 
     const uniqueServiceData = serviceData.filter(element => {
@@ -107,6 +131,20 @@ const OrderDetail = () => {
 
         if (!isDuplicate) {
             uniqueNames.push(element.categoryName);
+
+            return true;
+        }
+
+        return false;
+    });
+
+    const uniqueNamesStaff = [];
+
+    const uniqueStaffData = employeeData.filter(element => {
+        const isDuplicate = uniqueNamesStaff.includes(element.employeeId);
+
+        if (!isDuplicate) {
+            uniqueNamesStaff.push(element.employeeId);
 
             return true;
         }
@@ -251,6 +289,7 @@ const OrderDetail = () => {
                                 </Form.Group>
                             </Col>
                         </Row>
+
                         <Row className="mt-2">
                             {/* Thên Dịch vụ */}
                             <Col className="table-service">
@@ -283,37 +322,57 @@ const OrderDetail = () => {
                                 <Card.Title>Nhân viên</Card.Title>
                             </Col>
                         </Row>
-                        <Row className="mt-2">
-                            <Col className="table-staff">
-                                <Table bordered hover size="sm">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Tên nhân viên</th>
-                                            <th>Chuyên môn</th>
-                                            <th>Loại bỏ</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {employeeData
-                                            .map((employee, index) => {
-                                                return (
-                                                    <tr key={index}>
-                                                        <td>{index + 1}</td>
-                                                        <td>{employee.employeeName}</td>
-                                                        <td>{employee.specialtyName}</td>
-                                                        <td>
-                                                            <PersonRemoveIcon />
-                                                        </td>
-                                                    </tr>
-                                                )
-                                            })
-                                        }
-                                    </tbody>
-                                </Table>
+                        {isFetching ? (<div className="loading">
+                            <Spinner animation="border" />
+                            <div className="loading-text">Đang tải dữ liệu...</div>
+                        </div>) : (
+                            <Row className="mt-2">
+                                <Col className="table-staff">
+                                    <Table bordered hover size="sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Tên nhân viên</th>
+                                                <th>Chuyên môn</th>
+                                                <th>Loại bỏ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {uniqueStaffData
+                                                .map((employee, index) => {
+                                                    if (employee.workingStatus === true) {
+                                                        return (
+                                                            <tr key={index}>
+                                                                <td>{index + 1}</td>
+                                                                <td>{employee.employeeName}</td>
+                                                                <td>{employee.specialtyName}</td>
+                                                                <td>
+                                                                    {isFetching ? (<div className="loading">
+                                                                        <Spinner animation="border" />
+                                                                        <div className="loading-text">Đang tải dữ liệu...</div>
+                                                                    </div>) : (
+                                                                        <Button
+                                                                            onClick={() => {
 
-                            </Col>
-                        </Row>
+                                                                                removeStaff(employee.assignId, employee.employeeId)
+                                                                                // navigate('/manager/order-detail/' + orderId);
+                                                                            }}
+                                                                        >
+                                                                            <PersonRemoveIcon />
+                                                                        </Button>
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    }
+                                                })
+                                            }
+                                        </tbody>
+                                    </Table>
+
+                                </Col>
+                            </Row>
+                        )}
                         <Row>
                             <Col className="add-staff-btn">
                                 <Button

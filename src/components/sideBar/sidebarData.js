@@ -5,6 +5,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import LocalBarIcon from '@mui/icons-material/LocalBar';
 
 export const sidebarData = [
 
@@ -31,6 +32,12 @@ export const sidebarData = [
         title: "Nhân viên",
         icon: <SupportAgentIcon />,
         link: "/manager/Staff"
+    },
+
+    {
+        title: "Lịch nghỉ",
+        icon: <LocalBarIcon />,
+        link: "/manager/StaffDayOff"
     },
 
     {

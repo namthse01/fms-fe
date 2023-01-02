@@ -34,13 +34,13 @@ export const orderApi = apiSlice.injectEndpoints({
         }),
 
         //Delete Staff Assign:
-        postDeleteStaffAssign: builder.mutation({
-            query: (employeeDeleteData) => ({
-                url: `/api/assign/manager/deleteAssignByAssignId/${employeeDeleteData.assignId}/employeeId/${employeeDeleteData.employeeId}`,
+        putDeleteStaffAssign: builder.mutation({
+            query: (deleteData) => ({
+                url: `/api/assign/manager/deleteAssignByAssignId/${deleteData.assignId}/employeeId/${deleteData.employeeId}`,
                 method: "PUT",
                 body: {
-                    assignId: employeeDeleteData.assignId,
-                    employeeId: employeeDeleteData.employeeId,
+                    assignId: deleteData.assignId,
+                    employeeId: deleteData.employeeId,
                 },
             }),
         }),
@@ -96,5 +96,5 @@ export const { useGetAllOrdersQuery,
     usePostChangeWorkingStatusMutation,
     usePostChangeWorkingStatusApproveMutation,
     usePostChangeWorkingStatusAssignMutation,
-    usePostDeleteStaffAssignMutation,
+    usePutDeleteStaffAssignMutation,
 } = orderApi;

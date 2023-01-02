@@ -35,7 +35,7 @@ const Order = () => {
 
     // local state
     const [active, setActive] = useState(1);
-    const [Orders, setOrders] = useState([]);
+    const [orders, setOrders] = useState([]);
     const [filterWorking, setfilterWorking] = useState({
         status: "1",
     });
@@ -55,8 +55,10 @@ const Order = () => {
     } = useGetAllOrdersQuery();
 
     useEffect(() => {
+        console.log("Status:", filterWorking.status);
         if (!isFetching) {
-            setOrders(ordersData);
+            setOrders(ordersData.filter((x) => x.statusId == filterWorking.status));
+
         }
     }, [isFetching]);
 
@@ -67,38 +69,6 @@ const Order = () => {
         setfilterWorking({ ...filterWorking, [name]: value });
     };
 
-    //Status
-    const filterStatus = (status) => {
-        if (status === 1) {
-            return "1";
-        }
-
-        if (status === 2) {
-            return "2";
-        }
-
-        if (status === 3) {
-            return "3";
-        }
-
-        if (status === 4) {
-            return "4";
-        }
-
-        if (status === 5) {
-            return "5";
-        }
-
-        if (status === 6) {
-            return "6";
-        }
-
-        if (status === 7) {
-            return "7";
-        }
-
-        return "";
-    }
 
     const navigate = useNavigate();
 
@@ -130,6 +100,7 @@ const Order = () => {
         setOrderChangeData({ ...orderChangeData, workingStatus: value })
     };
 
+    console.log("Order:", orders.slice(10 * (active - 1), 10 * active));
 
     return (
 
@@ -208,65 +179,63 @@ const Order = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {Orders
-                                            .slice(10 * (active - 1), 10 * active)
+                                        {orders
+                                            .slice(5 * (active - 1), 5 * active)
                                             .map((order, index) => {
-                                                if (filterStatus(order.statusId) === filterWorking.status) {
-                                                    return (
-                                                        <tr key={index}>
-                                                            <td>{index + 1}</td>
-                                                            <td>{order.orderId}</td>
-                                                            <td>{order.customerName}</td>
-                                                            <td>{order.customerPhone}</td>
-                                                            <td>{order.statusName}</td>
-                                                            <td>
-                                                                {moment(order.createAt).format("MM/DD/YYYY")}
-                                                            </td>
-                                                            <td>
-                                                                <Button onClick={() => {
-                                                                    setShowChangeStatus(true);
-                                                                    setOrderChangeData({ ...orderChangeData, orderId: order.orderId })
-                                                                }} >
-                                                                    Đổi trạng thái đơn
-                                                                </Button>
-                                                            </td>
-                                                            <td>
-                                                                <div className="action-button-container">
-                                                                    <OverlayTrigger
-                                                                        placement="bottom"
-                                                                        delay={{ show: 200, hide: 100 }}
-                                                                        overlay={
-                                                                            <Tooltip
-                                                                                className="customer-edit-button"
-                                                                                id="edit-button-tooltip"
-                                                                            >
-                                                                                Xem chi tiết
-                                                                            </Tooltip>
-                                                                        }
-                                                                    >
-
-                                                                        {/* navigate to order detail */}
-                                                                        <Button
-                                                                            onClick={() => {
-                                                                                if (order.statusId === 1) {
-                                                                                    navigate('/manager/order-detail/' + order.orderId);
-                                                                                } else if (order.statusId === 3) {
-                                                                                    navigate('/manager/order-approved/' + order.orderId);
-                                                                                }
-                                                                                // else if(order.workingStatusId===6){
-                                                                                //     navigate('/manager/order-detail/' + order.orderId);
-                                                                                // }
-
-                                                                            }}
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>{index + 1}</td>
+                                                        <td>{order.orderId}</td>
+                                                        <td>{order.customerName}</td>
+                                                        <td>{order.customerPhone}</td>
+                                                        <td>{order.statusName}</td>
+                                                        <td>
+                                                            {moment(order.createAt).format("MM/DD/YYYY")}
+                                                        </td>
+                                                        <td>
+                                                            <Button onClick={() => {
+                                                                setShowChangeStatus(true);
+                                                                setOrderChangeData({ ...orderChangeData, orderId: order.orderId })
+                                                            }} >
+                                                                Đổi trạng thái đơn
+                                                            </Button>
+                                                        </td>
+                                                        <td>
+                                                            <div className="action-button-container">
+                                                                <OverlayTrigger
+                                                                    placement="bottom"
+                                                                    delay={{ show: 200, hide: 100 }}
+                                                                    overlay={
+                                                                        <Tooltip
+                                                                            className="customer-edit-button"
+                                                                            id="edit-button-tooltip"
                                                                         >
-                                                                            <BorderColorIcon />
-                                                                        </Button>
-                                                                    </OverlayTrigger>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    )
-                                                }
+                                                                            Xem chi tiết
+                                                                        </Tooltip>
+                                                                    }
+                                                                >
+
+                                                                    {/* navigate to order detail */}
+                                                                    <Button
+                                                                        onClick={() => {
+                                                                            if (order.statusId === 1) {
+                                                                                navigate('/manager/order-detail/' + order.orderId);
+                                                                            } else if (order.statusId === 3) {
+                                                                                navigate('/manager/order-approved/' + order.orderId);
+                                                                            }
+                                                                            // else if(order.workingStatusId===6){
+                                                                            //     navigate('/manager/order-detail/' + order.orderId);
+                                                                            // }
+
+                                                                        }}
+                                                                    >
+                                                                        <BorderColorIcon />
+                                                                    </Button>
+                                                                </OverlayTrigger>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )
                                             })
                                         }
                                     </tbody>
@@ -277,7 +246,7 @@ const Order = () => {
                     <Row className="mt-2">
                         <Col>
                             <CustomPagination
-                                count={Math.ceil(Orders.length / 10)}
+                                count={Math.ceil(orders.length / 5)}
                                 handlePaginationClick={handlePaginationClick}
                                 page={active}
                             />
